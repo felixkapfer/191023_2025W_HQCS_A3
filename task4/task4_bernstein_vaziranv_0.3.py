@@ -13,7 +13,7 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-# Ensure that ./src is on the Python path so that "utils" can be imported
+# Set project root for imports
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
@@ -48,7 +48,7 @@ os.makedirs(RESULTS_DIR, exist_ok=True)
 # -----------------------------
 circuit = QuantumCircuit(N_DATA_QUBITS + 1, N_DATA_QUBITS)
 
-# Prepare ancilla in |-> : |0> --X--> |1> --H--> |->
+# Prepare ancilla
 circuit.x(ANCILLA_QUBIT)
 circuit.h(ANCILLA_QUBIT)
 
@@ -146,9 +146,11 @@ os.makedirs(PLOTS_DIR, exist_ok=True)
 # -----------------------------
 # 1) Ideal distribution (noise-free, statevector)
 # -----------------------------
-# Use the *logical* circuit without measurements for the ideal reference.
+# Using *logical* circuit without measurements for the ideal reference.
 ideal_no_meas = circuit.remove_final_measurements(inplace=False)
 sv = Statevector.from_instruction(ideal_no_meas)
+
+
 
 # probabilities_dict returns bitstrings for the measured qargs.
 ideal_probs = sv.probabilities_dict(qargs=list(range(N_DATA_QUBITS)))
